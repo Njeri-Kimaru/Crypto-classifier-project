@@ -41,6 +41,30 @@ def generate_features(df):
     # b). Stochastic oscillator
     # percentage k current closing price 
     # percentage d  
-    df['stoch'] = ta.momentum.stochasticOscillator(
+    df['stoch'] = ta.momentum.StochasticOscillator(
     df['high'], df['low'], df['close']
     ).stoch()
+
+    # 4. TREND INDICATORS
+    # a). MACD (MOVING AAVERAGES CONVERGENCE AND DIVERGENCE)
+    macd = ta.trend.MACD(df['close'])
+    df['macd'] = macd.macd()
+    df['macd_signal'] = macd.macd_signal()
+    df['macd_diff'] = macd.macd_diff()
+
+    # 5. VOLATILITY INDICATOR
+    bollinger = ta.volatility.BollingerBands(df['close'])
+    df['bb_high'] = bollinger.bollinger_hband()
+    df['bb_low'] = bollinger.bollinger_lband()
+    df['bb_width'] = (df['bb_high'] - df['bb_low']) / df['close']
+
+    # 6. VOLUME FEATURES
+    df['volume_ma_7'] = df['volume'].rolling(7).mean()
+    df['volume_ratio'] = df['volume'] / df['volume_ma_7']
+
+    # 7.PRICE PATTERNS
+    df['high_low_ratio'] = df['high'] / df['low'] -1
+    df['close_open_ratio'] =df['close'] / df['open'] -1
+
+    return df
+
