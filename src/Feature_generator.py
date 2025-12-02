@@ -68,3 +68,19 @@ def generate_features(df):
 
     return df
 
+def add_stationary_features(df):
+    # transforming smas to distance from sma
+    df['dist_sma_7'] = (df['close'] / df['sma_7']) - 1
+    df['dist_sma_20'] = (df['close'] / df['sma_20']) - 1
+    df['dist_sma_50'] = (df['close'] / df['sma_50']) - 1
+    df['dist_sma_200'] = (df['close'] / df['sma_200']) - 1
+
+    # 2. Transforming bbs to %b
+    df['bb_width_2'] = df['bb_high'] - df['bb_low']
+    df['bb_pct_b'] = (df['close'] - df['bb_low'])/ df['bb_width_2']
+
+    #3. Transforming OHLC
+    df["close_open_pct"] = (df["close"] - df["open"])/ df["open"]
+    df["high_low_pct"] = (df["high"] - df["low"])/ df["low"]
+
+    return df
